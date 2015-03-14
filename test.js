@@ -1,17 +1,14 @@
 
-var Stream = require('./stream');
-var StreamDbState = require('./StreamDbState.js');
+var StreamDb = require('./StreamDb.js');
 var testObjectGenerator = require('./test-object-generator');
 
-console.log('generateTestStream');
 
-var stream = testObjectGenerator.generateTestStream(10000);
+var db = new StreamDb(null, {aggregate: true});
 
-console.log('aggregate');
+testObjectGenerator.generateTestStream(10000).forEach(function (update) {
 
-var aggregate = new StreamDbState();
-stream.forEach(aggregate.update.bind(aggregate));
+	db.write(update);
+});
 
-console.log('done');
-
-console.log(aggregate.topics);
+console.log(Object.keys(db.aggregate.topics).length);
+console.log(db.updates.length);

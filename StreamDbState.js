@@ -2,9 +2,15 @@
 module.exports = StreamDbState;
 
 
-function StreamDbState () {
+function StreamDbState (updateStream) {
 
 	this.topics = {};
+
+	updateStream.on('data', function (update) {
+
+		this.update(update);
+
+	}.bind(this));
 }
 
 
