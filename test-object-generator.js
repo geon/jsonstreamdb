@@ -1,5 +1,7 @@
 
 var uuid = require('uuid');
+var PassThrough = require('stream').PassThrough;
+
 
 function randomElement (array) {
 
@@ -65,11 +67,19 @@ function generateTestUpdate () {
 
 function generateTestStream (numUpdates) {
 
-	var  stream = [];
-	for(var i=0; i<numUpdates; ++i) {
+	var stream = new PassThrough({objectMode: true});
 
-		stream.push(generateTestUpdate());
-	}
+	// Start pumping in data asynchronously.
+	setTimeout(function () {
+
+		for(var i=0; i<numUpdates; ++i) {
+
+			stream.write(generateTestUpdate());
+		}
+
+		stream.end();
+
+	}, 0);
 
 	return stream;
 } 
