@@ -1,8 +1,12 @@
 
-var Stream = require('./stream');
 var testObjectGenerator = require('./test-object-generator');
+var JsonStreamSerializer = require('./JsonStreamSerializer');
 var fs = require('fs');
 
-var stream = testObjectGenerator.generateTestStream(10000);
+testObjectGenerator.generateTestStream(10000)
+	.pipe(new JsonStreamSerializer())
+	.pipe(fs.createWriteStream('test.jsonstreamdb'))
+	.on('data', function (update) {
 
-fs.writeFileSync('test.jsonstream', Stream.jsonObjectToJsonStream(stream));
+		console.log(update);
+	});
