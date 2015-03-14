@@ -1,10 +1,32 @@
 
 var uuid = require('uuid');
 
-var uuids = [];
-for (var i = 0; i < 20; ++i) {
-	uuids.push(uuid.v4());
+function randomElement (array) {
+
+	return array[Math.floor(Math.random()*array.length)];
 }
+
+var topicNames = [
+	'posts',
+	'authors',
+	'customers',
+	'projects',
+	'issues',
+	'invoices'
+];
+function makeTopic (name) {
+
+	var uuids = [];
+	for (var i = 0; i < 20; ++i) {
+		uuids.push(uuid.v4());
+	}
+
+	return {
+		name: name,
+		uuids: uuids
+	}
+}
+var topics = topicNames.map(makeTopic);
 
 var collumnNames = [
 	'foo',
@@ -21,6 +43,8 @@ var collumnNames = [
 
 function generateTestUpdate () {
 
+	var topic = randomElement(topics);
+
 	var data = {};
 	collumnNames.forEach(function (collumnName) {
 
@@ -31,8 +55,9 @@ function generateTestUpdate () {
 	});
 
 	return {
-		uuid: uuids[Math.floor(Math.random()*uuids.length)],
 		type: 'set', // or 'del'
+		uuid: randomElement(topic.uuids),
+		topic: topic.name,
 		data: data
 	};
 }

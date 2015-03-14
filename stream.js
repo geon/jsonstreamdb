@@ -1,7 +1,9 @@
 
 function aggregate (stream) {
 
-	return stream.reduce(function (aggregatedObjects, update) {
+	return stream.reduce(function (aggregatedTopics, update) {
+
+		var aggregatedObjects = aggregatedTopics[update.topic] || (aggregatedTopics[update.topic] = {});
 
 		if (update.type == 'set') {
 
@@ -17,7 +19,7 @@ function aggregate (stream) {
 			delete aggregatedObjects[update.uuid];
 		}
 
-		return aggregatedObjects;
+		return aggregatedTopics;
 
 	}, {});
 }
