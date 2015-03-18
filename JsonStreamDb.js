@@ -1,5 +1,5 @@
 
-module.exports = StreamDb;
+module.exports = JsonStreamDb;
 
 
 var PassThrough = require('stream').PassThrough;
@@ -8,7 +8,7 @@ var JsonStreamSerializer = require('./JsonStreamSerializer');
 var JsonStreamDeSerializer = require('./JsonStreamDeSerializer');
 
 
-function StreamDb (path, options) {
+function JsonStreamDb (path, options) {
 
 	this.path = path;
 
@@ -24,10 +24,10 @@ function StreamDb (path, options) {
 }
 
 
-StreamDb.prototype.__proto__ = PassThrough.prototype;
+JsonStreamDb.prototype.__proto__ = PassThrough.prototype;
 
 
-StreamDb.prototype.pipe = function (destination, options) {
+JsonStreamDb.prototype.pipe = function (destination, options) {
 
 	if (options && options.history != null) {
 
@@ -66,25 +66,25 @@ StreamDb.prototype.pipe = function (destination, options) {
 };
 
 
-StreamDb.prototype.create = function (topic, uuid, data) {
+JsonStreamDb.prototype.create = function (topic, uuid, data) {
 
-	this.write(StreamDb.makeEvent('add', topic, uuid, data));
+	this.write(JsonStreamDb.makeEvent('add', topic, uuid, data));
 };
 
 
-StreamDb.prototype.update = function (topic, uuid, data) {
+JsonStreamDb.prototype.update = function (topic, uuid, data) {
 
-	this.write(StreamDb.makeEvent('set', topic, uuid, data));
+	this.write(JsonStreamDb.makeEvent('set', topic, uuid, data));
 };
 
 
-StreamDb.prototype.delete = function (topic, uuid) {
+JsonStreamDb.prototype.delete = function (topic, uuid) {
 
-	this.write(StreamDb.makeEvent('del', topic, uuid, data));
+	this.write(JsonStreamDb.makeEvent('del', topic, uuid, data));
 };
 
 
-StreamDb.makeEvent = function (type, topic, uuid, data) {
+JsonStreamDb.makeEvent = function (type, topic, uuid, data) {
 
 	return {
 		type: type,

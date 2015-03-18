@@ -1,16 +1,16 @@
-StreamDb
-========
+JsonStreamDb
+============
 
-StreamDb is a toy Node.js stream database. Or something. Seriously, I have no idea what I'm doing.
+JsonStreamDb is a toy Node.js stream database. Or something. Seriously, I have no idea what I'm doing.
 
 
 Basic example
 -------------
 
 ```js
-var StreamDb = require('streamdb');
+var JsonStreamDb = require('jsonstreamdb');
 
-var db = new StreamDb('test.jsonstreamdb');
+var db = new JsonStreamDb('test.jsonstreamdb');
 db.pipe(process.stdout, {history: true});
 
 bd.create('users', '47c0479c-2083-4797-8d3c-419de31d45a7', {userName: 'geon'});
@@ -22,20 +22,20 @@ bd.delete('users', '47c0479c-2083-4797-8d3c-419de31d45a7');
 API
 ---
 
-Please not that StreamDb inherits stream.PassThrough. Since it is a stream, the standard stream API applies.
+Please not that JsonStreamDb inherits stream.PassThrough. Since it is a stream, the standard stream API applies.
 
-### StreamDb(path, options)
+### JsonStreamDb(path, options)
 
 The constructor.
 
-* `path` - Path to file for persistence. Only one StreamDb instance should ever use it at once.
+* `path` - Path to file for persistence. Only one JsonStreamDb instance should ever use it at once.
 * `options` - Standard stream options.
 
 
 
 ### db.pipe(options)
 
-StreamDb has an extra option; `history`. If set to `true`, `pipe` will stream the entire database from disk before giving you the "live" updates.
+JsonStreamDb has an extra option; `history`. If set to `true`, `pipe` will stream the entire database from disk before giving you the "live" updates.
 
 
 ### db.create(topic, uuid, data)
@@ -64,9 +64,9 @@ Add a delete-event to the db.
 * `uuid` - The id of the object.
 
 
-### StreamDb.makeEvent(type, topic, uuid, data)
+### JsonStreamDb.makeEvent(type, topic, uuid, data)
 
-Create a StreamDb event. You can add it to a db manually with `db.write(myEvent)`.
+Create a JsonStreamDb event. You can add it to a db manually with `db.write(myEvent)`.
 
 * `type` - The update type. One of the strings
 	* 'add' - Create

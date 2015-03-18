@@ -1,11 +1,11 @@
 
-module.exports = StreamDbState;
+module.exports = JsonStreamState;
 
 
 var Writable = require('stream').Writable;
 
 
-function StreamDbState (options) {
+function JsonStreamState (options) {
 
 	options = options || {};
 	options.objectMode = true;
@@ -16,10 +16,10 @@ function StreamDbState (options) {
 }
 
 
-StreamDbState.prototype.__proto__ = Writable.prototype;
+JsonStreamState.prototype.__proto__ = Writable.prototype;
 
 
-StreamDbState.prototype._write = function (update, encoding, callback) {
+JsonStreamState.prototype._write = function (update, encoding, callback) {
 
 	var objects = this.topics[update.topic] || (this.topics[update.topic] = {});
 

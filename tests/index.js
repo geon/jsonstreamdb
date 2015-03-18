@@ -1,12 +1,12 @@
 
-var StreamDb = require('../StreamDb.js');
-var StreamDbState = require('../StreamDbState.js');
+var JsonStreamDb = require('../JsonStreamDb.js');
+var JsonStreamState = require('../JsonStreamState.js');
 var testObjectGenerator = require('./test-object-generator.js');
 var JsonStreamSerializer = require('../JsonStreamSerializer.js');
 
 
-var db = new StreamDb('test.jsonstreamdb');
-// var aggregate = new StreamDbState(db);
+var db = new JsonStreamDb('test.jsonstreamdb');
+// var aggregate = new JsonStreamState(db);
 
 setInterval(function () {
 
