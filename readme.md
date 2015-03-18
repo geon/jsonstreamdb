@@ -13,9 +13,9 @@ var JsonStreamDb = require('jsonstreamdb');
 var db = new JsonStreamDb('test.jsonstreamdb');
 db.pipe(process.stdout, {history: true});
 
-bd.create('users', '47c0479c-2083-4797-8d3c-419de31d45a7', {userName: 'geon'});
-bd.update('users', '47c0479c-2083-4797-8d3c-419de31d45a7', {favoriteAnimal: 'kittens'});
-bd.delete('users', '47c0479c-2083-4797-8d3c-419de31d45a7');
+db.create('users', '47c0479c-2083-4797-8d3c-419de31d45a7', {userName: 'geon'});
+db.update('users', '47c0479c-2083-4797-8d3c-419de31d45a7', {favoriteAnimal: 'kittens'});
+db.delete('users', '47c0479c-2083-4797-8d3c-419de31d45a7');
 ```
 
 
