@@ -1,6 +1,7 @@
 
 var uuid = require('uuid');
 var PassThrough = require('stream').PassThrough;
+var StreamDb = require('../StreamDb.js');
 
 
 function randomElement (array) {
@@ -56,12 +57,12 @@ function generateTestUpdate () {
 		}
 	});
 
-	return {
-		type: 'set', // or 'del'
-		uuid: randomElement(topic.uuids),
-		topic: topic.name,
-		data: data
-	};
+	return StreamDb.makeEvent(
+		'set', // or 'del'
+		topic.name,
+		randomElement(topic.uuids),
+		data
+	);
 }
 
 

@@ -64,3 +64,32 @@ StreamDb.prototype.pipe = function (destination, options) {
 
 	return destination;
 };
+
+
+StreamDb.prototype.create = function (topic, uuid, data) {
+
+	this.write(StreamDb.makeEvent('add', topic, uuid, data));
+};
+
+
+StreamDb.prototype.update = function (topic, uuid, data) {
+
+	this.write(StreamDb.makeEvent('set', topic, uuid, data));
+};
+
+
+StreamDb.prototype.delete = function (topic, uuid) {
+
+	this.write(StreamDb.makeEvent('del', topic, uuid, data));
+};
+
+
+StreamDb.makeEvent = function (type, topic, uuid, data) {
+
+	return {
+		type: type,
+		uuid: uuid,
+		topic: topic,
+		data: data
+	};
+};
