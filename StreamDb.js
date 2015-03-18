@@ -3,63 +3,64 @@ module.exports = StreamDb;
 
 
 var PassThrough = require('stream').PassThrough;
-var LineStream = require('byline').LineStream;
-var StreamDbState = require('./StreamDbState.js');
+var fs = require('fs');
+var JsonStreamSerializer = require('./JsonStreamSerializer');
+var JsonStreamDeSerializer = require('./JsonStreamDeSerializer');
 
 
 function StreamDb (path, options) {
+
+	this.path = path;
 
 	options = options || {};
 	options.objectMode = true;
 
 	PassThrough.apply(this, [options]);
 
-	this.aggregate = options.aggregate && new StreamDbState(this);
-
-	// TODO: Implement persistence.
-
-	// Read past updates from disk.
-	// fs.createReadStream(path)
-	// 	.pipe(new LineStream())
-	// 	.pipe(this)
-	// ;
-
-	// // Write coming updates to disk.
-	// this
-	// 	.pipe(serialize)
-	// 	.pipe(new fs.createWriteStream(path))
-	// ;
-
-	this.updates = [];
+	// Append coming updates to disk.
+	this
+		.pipe(new JsonStreamSerializer())
+		.pipe(new fs.createWriteStream(this.path, {'flags': 'a'}));
 }
 
 
 StreamDb.prototype.__proto__ = PassThrough.prototype;
 
 
-// TODO: Remove when persistence is implemented.
-StreamDb.prototype._transform = function (update) {
-
-	this.updates.push(update);
-
-	PassThrough.prototype._transform.apply(this, arguments);
-};
-
-
 StreamDb.prototype.pipe = function (destination, options) {
 
-	if (options.history != null) {
+	if (options && options.history != null) {
 
-		// Send the n latest updates from the history. Or all of them.
-		(options.history === true || options.history === 0
-			? this.updates
-			: this.updates.slice(-options.history)
-		)
-			.map(destination.write.bind(destination));
+		// Buffer incoming updates until done with disk.
+		this.cork();
+
+		// Read past updates from disk.
+		var fileStream = fs.createReadStream(this.path);
+
+		fileStream
+			.pipe(new JsonStreamDeSerializer())
+
+			// TODO: Mark the updates as read from disk. (No side effects should be triggered.)
+
+ 			.pipe(destination, {end: false}) // Don't close destination. Not done writing yet.
+ 		;
+
+		// Pipe future (and corked) events to destination.
+		fileStream
+			.once('end', function () {
+
+				PassThrough.prototype.pipe.apply(this, [destination, options]);
+
+				// Stop buffering and flush.
+				this.uncork();
+
+			}.bind(this));
+
+	} else {
+
+		// Just pass through.
+		PassThrough.prototype.pipe.apply(this, [destination, options]);
 	}
 
-	// Send all coming updates.
-	PassThrough.prototype.pipe.apply(this, [destination, options]);
-
 	return destination;
-}
+};
