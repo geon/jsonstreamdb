@@ -11,7 +11,7 @@
     "url": "git://github.com/geon/jsonstreamdb.git"
   },
   "author": "Victor Widell <victor@topmost.se> (http://geon.github.com/)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/geon/jsonstreamdb/issues"
   },
