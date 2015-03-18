@@ -2,19 +2,24 @@
 module.exports = StreamDbState;
 
 
-function StreamDbState (updateStream) {
+var Writable = require('stream').Writable;
+
+
+function StreamDbState (options) {
+
+	options = options || {};
+	options.objectMode = true;
+
+	Writable.apply(this, [options]);
 
 	this.topics = {};
-
-	updateStream.on('data', function (update) {
-
-		this.update(update);
-
-	}.bind(this));
 }
 
 
-StreamDbState.prototype.update = function (update) {
+StreamDbState.prototype.__proto__ = Writable.prototype;
+
+
+StreamDbState.prototype._write = function (update, encoding, callback) {
 
 	var objects = this.topics[update.topic] || (this.topics[update.topic] = {});
 
@@ -32,4 +37,6 @@ StreamDbState.prototype.update = function (update) {
 
 		delete objects[update.uuid];
 	}
-};
+
+	callback();
+}
