@@ -1,8 +1,8 @@
 
-var StreamDb = require('./StreamDb.js');
-var StreamDbState = require('./StreamDbState.js');
-var testObjectGenerator = require('./test-object-generator');
-var JsonStreamSerializer = require('./JsonStreamSerializer');
+var StreamDb = require('../StreamDb.js');
+var StreamDbState = require('../StreamDbState.js');
+var testObjectGenerator = require('./test-object-generator.js');
+var JsonStreamSerializer = require('../JsonStreamSerializer.js');
 
 
 var db = new StreamDb('test.jsonstreamdb');
