@@ -22,7 +22,7 @@ db.delete('users', '47c0479c-2083-4797-8d3c-419de31d45a7');
 API
 ---
 
-Please not that JsonStreamDb inherits stream.PassThrough. Since it is a stream, the standard stream API applies.
+Please note that JsonStreamDb inherits `stream.PassThrough`. Since it is a stream, the standard stream API applies.
 
 ### JsonStreamDb(path, options)
 
