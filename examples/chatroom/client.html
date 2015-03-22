@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chat Room</title>
+	</head>
+	<body>
+
+		<ul id="log"></ul>
+
+		<input id="input">
+
+		<script>
+
+			var log = document.getElementById('log');
+
+			var webSocket = new WebSocket('ws://localhost:3000');
+			webSocket.onopen = function (event) {
+
+				var el = document.getElementById('input');
+
+				el.addEventListener('keyup', function (event) {
+
+					if (event.keyCode == 13) {
+
+						webSocket.send(JSON.stringify({type: 'say', line: el.value}));
+						el.value = '';
+					}
+				});
+			};
+
+			webSocket.onmessage = function (message) {
+
+				var update = JSON.parse(message.data);
+
+				switch (update.topic) {
+
+					case 'clients':
+
+						break;
+
+					case 'lines':
+						var el = document.createElement('li');
+						el.textContent = update.data.line;
+						log.appendChild(el);
+						break;
+
+					default:
+						console.error('Unknown topic:', update);
+				}
+			};
+
+		</script>
+
+	</body>
+</html>
