@@ -19,6 +19,7 @@ function JsonStreamDb (path, options) {
 
 	// Append coming updates to disk.
 	this
+		// TODO: Mark the updates as read from disk. (No side effects should be triggered.)
 		.pipe(new JsonStreamSerializer())
 		.pipe(new fs.createWriteStream(this.path, {'flags': 'a'}));
 }
@@ -39,9 +40,6 @@ JsonStreamDb.prototype.pipe = function (destination, options) {
 
 		fileStream
 			.pipe(new JsonStreamDeSerializer())
-
-			// TODO: Mark the updates as read from disk. (No side effects should be triggered.)
-
  			.pipe(destination, {end: false}) // Don't close destination. Not done writing yet.
  		;
 
@@ -80,7 +78,7 @@ JsonStreamDb.prototype.update = function (topic, uuid, data) {
 
 JsonStreamDb.prototype.delete = function (topic, uuid) {
 
-	this.write(JsonStreamDb.makeEvent('del', topic, uuid, data));
+	this.write(JsonStreamDb.makeEvent('del', topic, uuid));
 };
 
 
