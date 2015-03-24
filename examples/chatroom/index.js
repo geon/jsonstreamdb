@@ -1,7 +1,5 @@
 
 var JsonStreamDb = require('../../JsonStreamDb.js');
-var JsonStreamState = require('../../JsonStreamState.js');
-var JsonStreamSerializer = require('../../JsonStreamSerializer.js');
 
 var http = require('http');
 var fs = require('fs')
