@@ -32,28 +32,8 @@ var db = new JsonStreamDb('chatlog.jsonstreamdb');
 
 wsServer.on('connect', function(connection) {
 
-	db.pipe(new WebsocketStream(connection, {objectMode: true}), {history: true});
-
-	var chatClient = new ChatClient(db);
-
-	connection.on('message', function(data) {
-
-		var message = JSON.parse(data.utf8Data);
-
-		switch (message.type) {
-
-			case 'say':
-				chatClient.say(message.line);
-				break;
-
-			default:
-				console.error(new Date(), 'Unknown message type:', message);
-				break;
-		}
-	});
-
-	connection.on('close', function(reasonCode, description) {
-
-		chatClient.destroy();
-	});
+	var chatClient = new ChatClient(
+		db,
+		new WebsocketStream(connection, {objectMode: true})
+	);
 });
