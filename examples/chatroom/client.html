@@ -13,7 +13,7 @@
 
 			var log = document.getElementById('log');
 
-			var webSocket = new WebSocket('ws://localhost:3000');
+			var webSocket = new WebSocket('ws://'+window.location.host);
 			webSocket.onopen = function (event) {
 
 				var el = document.getElementById('input');
