@@ -12,7 +12,7 @@ function ChatClient (db, websocketStream) {
 	this.uuid = uuid.v4();
 
 	websocketStream
-		.pipe(new FromWebsocketToDb())
+		.pipe(new FromWebsocketToDb(this.uuid))
 		.pipe(db)
 	;
 
@@ -28,12 +28,14 @@ function ChatClient (db, websocketStream) {
 }
 
 
-function FromWebsocketToDb (options) {
+function FromWebsocketToDb (clientId, options) {
 
 	options = options || {};
 	options.objectMode = true;
 
 	Transform.apply(this, [options]);
+
+	this.clientId = clientId;
 }
 
 
@@ -51,7 +53,7 @@ FromWebsocketToDb.prototype._transform = function (message, options, callback) {
 				uuid.v4(),
 				{
 					time: new Date(),
-					clientId: this.uuid,
+					clientId: this.clientId,
 					line: message.line
 				}
 			));
