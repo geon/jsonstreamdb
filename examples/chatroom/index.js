@@ -12,7 +12,6 @@ var ChatClient = require('./ChatClient.js');
 
 var httpServer = http.createServer(function (request, response) {
 
-	request.pipe(process.stdout);
 
 	fs.createReadStream('client.html').pipe(response)
 });
