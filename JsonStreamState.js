@@ -23,19 +23,31 @@ JsonStreamState.prototype._write = function (update, encoding, callback) {
 
 	var objects = this.topics[update.topic] || (this.topics[update.topic] = {});
 
-	if (update.type == 'set') {
+	switch (update.type) {
 
-		var object = objects[update.uuid] || (objects[update.uuid] = {});
+		case 'set': {
 
-		Object.keys(update.data).forEach(function (key) {
+			var object = objects[update.uuid] || (objects[update.uuid] = {});
 
-			object[key] = update.data[key];
-		});
+			Object.keys(update.data).forEach(function (key) {
 
-	} else {
-		// update.type == 'del'
+				object[key] = update.data[key];
+			});
 
-		delete objects[update.uuid];
+		} break;
+
+
+		case 'del': {
+
+			delete objects[update.uuid];
+
+		} break;
+
+
+		default: {
+
+			throw new Error(update.type+' is not a known update type.');
+		}
 	}
 
 	callback();
