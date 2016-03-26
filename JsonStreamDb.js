@@ -64,12 +64,6 @@ JsonStreamDb.prototype.pipe = function (destination, options) {
 };
 
 
-JsonStreamDb.prototype.create = function (topic, uuid, data) {
-
-	this.write(JsonStreamDb.makeEvent('add', topic, uuid, data));
-};
-
-
 JsonStreamDb.prototype.update = function (topic, uuid, data) {
 
 	this.write(JsonStreamDb.makeEvent('set', topic, uuid, data));

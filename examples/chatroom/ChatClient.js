@@ -20,7 +20,7 @@ function ChatClient (db, websocketStream) {
 		.pipe(websocketStream, {history: true})
 	;
 
-	db.create('clients', this.uuid, {time: new Date()});
+	db.update('clients', this.uuid, {time: new Date()});
 	websocketStream.on('end', function () {
 
 		db.delete('clients', this.uuid);
