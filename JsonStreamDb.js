@@ -6,6 +6,8 @@ var PassThrough = require('stream').PassThrough;
 var fs = require('fs');
 var JsonStreamSerializer = require('./JsonStreamSerializer');
 var JsonStreamDeSerializer = require('./JsonStreamDeSerializer');
+var JsonStreamDbHistoryFilter = require('./JsonStreamDbHistoryFilter');
+var JsonStreamDbSerialCounter = require('./JsonStreamDbSerialCounter');
 
 
 function JsonStreamDb (path, options) {
@@ -17,11 +19,33 @@ function JsonStreamDb (path, options) {
 
 	PassThrough.apply(this, [options]);
 
-	// Append coming updates to disk.
-	this
-		// TODO: Mark the updates as read from disk. (No side effects should be triggered.)
-		.pipe(new JsonStreamSerializer())
-		.pipe(new fs.createWriteStream(this.path, {'flags': 'a'}));
+	// Buffer incoming updates until done with disk.
+	this.cork();
+
+	// Find the last serial used in the existing db.
+	this.lastSerial = 0;
+	fs.createReadStream(this.path)
+		.pipe(new JsonStreamDeSerializer())
+		.on('data', function (event) {
+
+			this.lastSerial = event.serial;
+		})
+		.once('end', function () {
+
+			// Append coming updates to disk.
+			this
+				// Set the serial on each update.
+				.pipe(new JsonStreamDbSerialCounter(this.lastSerial))
+				// TODO: Mark the updates as read from disk. (No side effects should be triggered.)
+				.pipe(new JsonStreamSerializer())
+				// Write incoming updates to disk.
+				.pipe(new fs.createWriteStream(this.path, {'flags': 'a'}));
+
+			// Stop buffering and flush.
+			this.uncork();
+
+		}.bind(this))
+		.resume(); // Start streaming.
 }
 
 
@@ -30,7 +54,9 @@ JsonStreamDb.prototype.__proto__ = PassThrough.prototype;
 
 JsonStreamDb.prototype.pipe = function (destination, options) {
 
-	if (options && options.history != null) {
+	var includeHistorySince = options && options.includeHistorySince;
+
+	if (includeHistorySince != undefined) {
 
 		// Buffer incoming updates until done with disk.
 		this.cork();
@@ -40,6 +66,7 @@ JsonStreamDb.prototype.pipe = function (destination, options) {
 
 		fileStream
 			.pipe(new JsonStreamDeSerializer())
+			.pipe(new JsonStreamDbHistoryFilter(includeHistorySince))
  			.pipe(destination, {end: false}) // Don't close destination. Not done writing yet.
  		;
 

@@ -17,7 +17,7 @@ function ChatClient (db, websocketStream) {
 	;
 
 	db
-		.pipe(websocketStream, {history: true})
+		.pipe(websocketStream, {includeHistorySince: 0})
 	;
 
 	db.update('clients', this.uuid, {time: new Date()});
