@@ -13,4 +13,5 @@
 	* Multiple rooms
 		* Create/delete
 		* Enter
-
+* Convert to es6
+* Port to typescript?
