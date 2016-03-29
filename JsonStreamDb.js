@@ -105,6 +105,8 @@ JsonStreamDb.prototype.delete = function (topic, uuid) {
 
 JsonStreamDb.makeEvent = function (type, topic, uuid, data) {
 
+	// TODO: Throw on missing arguments.
+
 	return {
 		type: type,
 		uuid: uuid,
