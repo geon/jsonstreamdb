@@ -29,7 +29,7 @@ function JsonStreamDb (path, options) {
 		.on('data', function (event) {
 
 			this.lastSerial = event.serial;
-		})
+		}.bind(this))
 		.once('end', function () {
 
 			// Append coming updates to disk.
