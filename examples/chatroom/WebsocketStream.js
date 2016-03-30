@@ -1,8 +1,7 @@
 
-module.exports = WebsocketStream;
+export default WebsocketStream;
 
-
-var Duplex = require('stream').Duplex;
+import {Duplex} from 'stream';
 
 
 function WebsocketStream (websocket, options) {

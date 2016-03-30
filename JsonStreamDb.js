@@ -1,6 +1,6 @@
 
 import {PassThrough} from 'stream';
-import {createReadStream, createWriteStream} from 'fs';
+import * as fs from 'fs';
 import JsonStreamSerializer from './JsonStreamSerializer';
 import JsonStreamDeSerializer from './JsonStreamDeSerializer';
 import JsonStreamDbHistoryFilter from './JsonStreamDbHistoryFilter';
@@ -21,7 +21,7 @@ export default function JsonStreamDb (path, options) {
 
 	// Find the last serial used in the existing db.
 	this.lastSerial = 0;
-	createReadStream(this.path)
+	fs.createReadStream(this.path)
 		.pipe(new JsonStreamDeSerializer())
 		.on('data', event => {
 
@@ -35,7 +35,7 @@ export default function JsonStreamDb (path, options) {
 				.pipe(new JsonStreamDbSerialCounter(this.lastSerial))
 				// Write incoming updates to disk.
 				.pipe(new JsonStreamSerializer())
-				.pipe(new createWriteStream(this.path, {'flags': 'a'}));
+				.pipe(new fs.createWriteStream(this.path, {'flags': 'a'}));
 
 			// Stop buffering and flush.
 			this.uncork();
@@ -58,7 +58,7 @@ JsonStreamDb.prototype.pipe = function (destination, options) {
 		this.cork();
 
 		// Read past updates from disk.
-		var fileStream = createReadStream(this.path);
+		var fileStream = fs.createReadStream(this.path);
 
 		fileStream
 			.pipe(new JsonStreamDeSerializer())

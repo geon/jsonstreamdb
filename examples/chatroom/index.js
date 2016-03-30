@@ -1,10 +1,10 @@
 
-var JsonStreamDb = require('../../JsonStreamDb.js');
+import JsonStreamDb from '../../JsonStreamDb.js';
 
-var http = require('http');
-var fs = require('fs')
-var WebSocketServer = require('websocket').server
-var WebsocketStream = require('./WebsocketStream.js');
+import http from 'http';
+import * as fs from 'fs';
+import {server as WebSocketServer} from websocket;
+import WebsocketStream from './WebsocketStream.js';
 
 var ChatClient = require('./ChatClient.js');
 
