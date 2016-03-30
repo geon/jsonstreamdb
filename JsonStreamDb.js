@@ -36,9 +36,8 @@ function JsonStreamDb (path, options) {
 			this
 				// Set the serial on each update.
 				.pipe(new JsonStreamDbSerialCounter(this.lastSerial))
-				// TODO: Mark the updates as read from disk. (No side effects should be triggered.)
-				.pipe(new JsonStreamSerializer())
 				// Write incoming updates to disk.
+				.pipe(new JsonStreamSerializer())
 				.pipe(new fs.createWriteStream(this.path, {'flags': 'a'}));
 
 			// Stop buffering and flush.
@@ -78,7 +77,6 @@ JsonStreamDb.prototype.pipe = function (destination, options) {
 
 				// Stop buffering and flush.
 				this.uncork();
-
 			});
 
 	} else {
