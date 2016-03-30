@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"outDir": "compiled",
+		"allowJs": true
+	},
+	"files": [
+		"JsonStreamDb.js"
+	]
+}

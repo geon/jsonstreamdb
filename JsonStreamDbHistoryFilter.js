@@ -1,11 +1,7 @@
 
-module.exports = JsonStreamDbHistoryFilter;
+import {Transform} from 'stream';
 
-
-var Transform = require('stream').Transform;
-
-
-function JsonStreamDbHistoryFilter (includeHistorySince, options) {
+export default function JsonStreamDbHistoryFilter (includeHistorySince, options) {
 
 	this.includeHistorySince = includeHistorySince;
 

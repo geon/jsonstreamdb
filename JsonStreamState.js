@@ -1,11 +1,8 @@
 
-module.exports = JsonStreamState;
+import {Writable} from 'stream';
 
 
-var Writable = require('stream').Writable;
-
-
-function JsonStreamState (options) {
+export default  function JsonStreamState (options) {
 
 	options = options || {};
 	options.objectMode = true;
