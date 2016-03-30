@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"outFile": "compiled.js",
+		"allowJs": true
+	},
+	"files": [
+		"index.js"
+	]
+}
