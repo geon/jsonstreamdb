@@ -26,11 +26,11 @@ function JsonStreamDb (path, options) {
 	this.lastSerial = 0;
 	fs.createReadStream(this.path)
 		.pipe(new JsonStreamDeSerializer())
-		.on('data', function (event) {
+		.on('data', event => {
 
 			this.lastSerial = event.serial;
-		}.bind(this))
-		.once('end', function () {
+		})
+		.once('end', _ => {
 
 			// Append coming updates to disk.
 			this
@@ -44,7 +44,7 @@ function JsonStreamDb (path, options) {
 			// Stop buffering and flush.
 			this.uncork();
 
-		}.bind(this))
+		})
 		.resume(); // Start streaming.
 }
 
@@ -72,14 +72,14 @@ JsonStreamDb.prototype.pipe = function (destination, options) {
 
 		// Pipe future (and corked) events to destination.
 		fileStream
-			.once('end', function () {
+			.once('end', _ => {
 
 				PassThrough.prototype.pipe.apply(this, [destination, options]);
 
 				// Stop buffering and flush.
 				this.uncork();
 
-			}.bind(this));
+			});
 
 	} else {
 

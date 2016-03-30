@@ -18,7 +18,7 @@ function JsonStreamDeSerializer (options) {
 	splitToLines.pipe(this);
 
 	// Redirect any piping to the internal pipe-chain.
-	this.on('pipe', function (source) {
+	this.on('pipe', source => {
 
 		source.unpipe(this);
 		source.pipe(splitToLines);

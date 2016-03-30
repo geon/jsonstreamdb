@@ -29,7 +29,7 @@ JsonStreamState.prototype._write = function (update, encoding, callback) {
 
 			var object = objects[update.uuid] || (objects[update.uuid] = {});
 
-			Object.keys(update.data).forEach(function (key) {
+			Object.keys(update.data).forEach(key => {
 
 				object[key] = update.data[key];
 			});

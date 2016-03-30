@@ -14,15 +14,15 @@ function WebsocketStream (websocket, options) {
 
 	this.websocket = websocket;
 
-	this.websocket.on('message', function (data) {
+	this.websocket.on('message', data => {
 
 		this.push(JSON.parse(data.utf8Data));
-	}.bind(this));
+	});
 
-	this.websocket.on('close', function(reasonCode, description) {
+	this.websocket.on('close', (reasonCode, description) => {
 
 		this.end();
-	}.bind(this));
+	});
 }
 
 

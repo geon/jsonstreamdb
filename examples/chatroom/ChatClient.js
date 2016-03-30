@@ -21,7 +21,7 @@ function ChatClient (db, websocketStream) {
 	;
 
 	db.update('clients', this.uuid, {time: new Date()});
-	websocketStream.on('end', function () {
+	websocketStream.on('end', _ => {
 
 		db.delete('clients', this.uuid);
 	});

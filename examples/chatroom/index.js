@@ -10,7 +10,7 @@ var ChatClient = require('./ChatClient.js');
 
 
 // Serve the client static file.
-var httpServer = http.createServer(function (request, response) {
+var httpServer = http.createServer((request, response) => {
 
 	fs.createReadStream('client.html').pipe(response)
 });
@@ -26,7 +26,7 @@ wsServer = new WebSocketServer({
 	httpServer: httpServer,
 	autoAcceptConnections: true
 });
-wsServer.on('connect', function(connection) {
+wsServer.on('connect', connection => {
 
 	var chatClient = new ChatClient(
 		db,
