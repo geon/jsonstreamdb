@@ -4,6 +4,6 @@
 		"allowJs": true
 	},
 	"files": [
-		"JsonStreamDb.js"
+		"index.js"
 	]
 }
