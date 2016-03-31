@@ -1,5 +1,5 @@
 
-export * from './JsonStreamDb.js';
-export * from './JsonStreamState.js';
+export * from './JsonStreamDb';
+export * from './JsonStreamState';
 export * from './JsonStreamSerializer';
 export * from './JsonStreamDeSerializer';
