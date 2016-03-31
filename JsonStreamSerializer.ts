@@ -1,7 +1,7 @@
 
 import {Transform} from 'stream';
 
-export default function JsonStreamSerializer (options) {
+export default function JsonStreamSerializer (options?) {
 
 	options = options || {};
 	options.objectMode = true;

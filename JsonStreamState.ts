@@ -2,7 +2,7 @@
 import {Writable} from 'stream';
 
 
-export default  function JsonStreamState (options) {
+export default  function JsonStreamState (options?) {
 
 	options = options || {};
 	options.objectMode = true;

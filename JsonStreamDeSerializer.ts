@@ -2,7 +2,7 @@
 import {LineStream} from 'byline';
 import {Transform} from 'stream';
 
-export default function JsonStreamDeSerializer (options) {
+export default function JsonStreamDeSerializer (options?) {
 
 	options = options || {};
 	options.objectMode = true;

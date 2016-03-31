@@ -1,7 +1,7 @@
 
 import {Transform} from 'stream';
 
-export default function JsonStreamDbSerialCounter (lastSerial, options) {
+export default function JsonStreamDbSerialCounter (lastSerial, options?) {
 
 	this.lastSerial = lastSerial;
 
