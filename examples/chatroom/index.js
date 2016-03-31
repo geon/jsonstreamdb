@@ -10,7 +10,7 @@ import ChatClient from './ChatClient.js';
 
 
 // Serve the client static file.
-var httpServer = http.createServer((request, response) => {
+const httpServer = http.createServer((request, response) => {
 
 	fs.createReadStream('client.html').pipe(response)
 });
@@ -18,7 +18,7 @@ httpServer.listen(3000);
 
 
 // The chatlog.
-var db = new JsonStreamDb('chatlog.jsonstreamdb');
+const db = new JsonStreamDb('chatlog.jsonstreamdb');
 
 
 // Set up the WS server.
@@ -28,7 +28,7 @@ wsServer = new WebSocketServer({
 });
 wsServer.on('connect', connection => {
 
-	var chatClient = new ChatClient(
+	const chatClient = new ChatClient(
 		db,
 		new WebsocketStream(connection, {objectMode: true})
 	);

@@ -11,7 +11,7 @@ function JsonStreamDeSerializer (options) {
 
 	Transform.apply(this, [options]);
 
-	var splitToLines = new LineStream();
+	const splitToLines = new LineStream();
 
 	splitToLines.pipe(this);
 

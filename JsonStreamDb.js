@@ -52,7 +52,7 @@ JsonStreamDb.prototype.__proto__ = PassThrough.prototype;
 
 JsonStreamDb.prototype.pipe = function (destination, options) {
 
-	var includeHistorySince = options && options.includeHistorySince;
+	const includeHistorySince = options && options.includeHistorySince;
 
 	if (includeHistorySince != undefined) {
 
@@ -60,7 +60,7 @@ JsonStreamDb.prototype.pipe = function (destination, options) {
 		this.cork();
 
 		// Read past updates from disk.
-		var fileStream = fs.createReadStream(this.path);
+		const fileStream = fs.createReadStream(this.path);
 
 		fileStream
 			.pipe(new JsonStreamDeSerializer())

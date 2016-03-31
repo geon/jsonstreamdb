@@ -20,13 +20,13 @@ JsonStreamState.prototype.__proto__ = Writable.prototype;
 
 JsonStreamState.prototype._write = function (update, encoding, callback) {
 
-	var objects = this.topics[update.topic] || (this.topics[update.topic] = {});
+	const objects = this.topics[update.topic] || (this.topics[update.topic] = {});
 
 	switch (update.type) {
 
 		case 'set': {
 
-			var object = objects[update.uuid] || (objects[update.uuid] = {});
+			const object = objects[update.uuid] || (objects[update.uuid] = {});
 
 			Object.keys(update.data).forEach(key => {
 
