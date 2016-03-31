@@ -1,10 +1,8 @@
 
-module.exports = JsonStreamDeSerializer;
+export default JsonStreamDeSerializer;
 
-
-var LineStream = require('byline').LineStream;
-var Transform = require('stream').Transform;
-
+import {LineStream} from 'byline';
+import {Transform} from 'stream';
 
 function JsonStreamDeSerializer (options) {
 

@@ -1,9 +1,7 @@
 
-module.exports = JsonStreamSerializer;
+export default JsonStreamSerializer;
 
-
-var Transform = require('stream').Transform;
-
+import {Transform} from 'stream';
 
 function JsonStreamSerializer (options) {
 

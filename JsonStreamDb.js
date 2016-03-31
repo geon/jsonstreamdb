@@ -1,13 +1,12 @@
 
-module.exports = JsonStreamDb;
+export default JsonStreamDb;
 
-
-var PassThrough = require('stream').PassThrough;
-var fs = require('fs');
-var JsonStreamSerializer = require('./JsonStreamSerializer');
-var JsonStreamDeSerializer = require('./JsonStreamDeSerializer');
-var JsonStreamDbHistoryFilter = require('./JsonStreamDbHistoryFilter');
-var JsonStreamDbSerialCounter = require('./JsonStreamDbSerialCounter');
+import {PassThrough} from 'stream';
+import * as fs from 'fs';
+import JsonStreamSerializer from './JsonStreamSerializer';
+import JsonStreamDeSerializer from './JsonStreamDeSerializer';
+import JsonStreamDbHistoryFilter from './JsonStreamDbHistoryFilter';
+import JsonStreamDbSerialCounter from './JsonStreamDbSerialCounter';
 
 
 function JsonStreamDb (path, options) {

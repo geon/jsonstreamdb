@@ -1,10 +1,10 @@
 
-var uuid = require('uuid');
-var Transform = require('stream').Transform;
-var JsonStreamDb = require('../../JsonStreamDb.js');
+import * as uuid from 'uuid';
+import {Transform} from 'stream';
+import JsonStreamDb from '../../JsonStreamDb.js';
 
 
-module.exports = ChatClient;
+export default ChatClient;
 
 
 function ChatClient (db, websocketStream) {

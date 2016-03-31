@@ -1,8 +1,5 @@
 
-module.exports = {
-
-	JsonStreamDb: require('./JsonStreamDb.js'),
-	JsonStreamState: require('./JsonStreamState.js'),
-	JsonStreamSerializer: require('./JsonStreamSerializer'),
-	JsonStreamDeSerializer: require('./JsonStreamDeSerializer'),
-} ;
+export * from './JsonStreamDb.js';
+export * from './JsonStreamState.js';
+export * from './JsonStreamSerializer';
+export * from './JsonStreamDeSerializer';

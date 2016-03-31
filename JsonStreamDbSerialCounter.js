@@ -1,9 +1,7 @@
 
-module.exports = JsonStreamDbSerialCounter;
+export default JsonStreamDbSerialCounter;
 
-
-var Transform = require('stream').Transform;
-
+import {Transform} from 'stream';
 
 function JsonStreamDbSerialCounter (lastSerial, options) {
 
