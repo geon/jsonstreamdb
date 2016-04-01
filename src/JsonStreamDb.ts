@@ -10,105 +10,116 @@ import JsonStreamDbHistoryFilter from './JsonStreamDbHistoryFilter';
 import JsonStreamDbSerialCounter from './JsonStreamDbSerialCounter';
 
 
-function JsonStreamDb (path, options) {
+class JsonStreamDb extends PassThrough {
 
-	this.path = path;
-
-	options = options || {};
-	options.objectMode = true;
-
-	PassThrough.apply(this, [options]);
-
-	// Buffer incoming updates until done with disk.
-	this.cork();
-
-	// Find the last serial used in the existing db.
-	this.lastSerial = 0;
-	fs.createReadStream(this.path)
-		.pipe(new JsonStreamDeSerializer())
-		.on('data', event => {
-
-			this.lastSerial = event.serial;
-		})
-		.once('end', _ => {
-
-			// Append coming updates to disk.
-			this
-				// Set the serial on each update.
-				.pipe(new JsonStreamDbSerialCounter(this.lastSerial))
-				// Write incoming updates to disk.
-				.pipe(new JsonStreamSerializer())
-				.pipe(fs.createWriteStream(this.path, {'flags': 'a'}));
-
-			// Stop buffering and flush.
-			this.uncork();
-
-		})
-		.resume(); // Start streaming.
-}
+	path: string;
+	lastSerial: number;
 
 
-JsonStreamDb.prototype.__proto__ = PassThrough.prototype;
+	constructor (path, options) {
 
+		options = options || {};
+		options.objectMode = true;
 
-JsonStreamDb.prototype.pipe = function (destination, options) {
+		super(options);
 
-	const includeHistorySince = options && options.includeHistorySince;
+		this.path = path;
 
-	if (includeHistorySince != undefined) {
+		// TODO: Apparently, cork is not part of the PassThrough. Oops.
+		// Just goes to show TypeScript is worthwile.
+		// // Buffer incoming updates until done with disk.
+		// super.cork();
 
-		// Buffer incoming updates until done with disk.
-		this.cork();
-
-		// Read past updates from disk.
-		const fileStream = fs.createReadStream(this.path);
-
-		fileStream
+		// Find the last serial used in the existing db.
+		this.lastSerial = 0;
+		fs.createReadStream(this.path)
 			.pipe(new JsonStreamDeSerializer())
-			.pipe(new JsonStreamDbHistoryFilter(includeHistorySince))
- 			.pipe(destination, {end: false}) // Don't close destination. Not done writing yet.
- 		;
+			.on('data', event => {
 
-		// Pipe future (and corked) events to destination.
-		fileStream
+				this.lastSerial = event.serial;
+			})
 			.once('end', _ => {
 
-				PassThrough.prototype.pipe.apply(this, [destination, options]);
+				// Append coming updates to disk.
+				super
+					// Set the serial on each update.
+					.pipe(new JsonStreamDbSerialCounter(this.lastSerial))
+					// Write incoming updates to disk.
+					.pipe(new JsonStreamSerializer())
+					.pipe(fs.createWriteStream(this.path, {'flags': 'a'}));
 
-				// Stop buffering and flush.
-				this.uncork();
-			});
+				// TODO: Does not exist on PassThrough.
+				// // Stop buffering and flush.
+				// super.uncork();
 
-	} else {
-
-		// Just pass through.
-		PassThrough.prototype.pipe.apply(this, [destination, options]);
+			})
+			.resume(); // Start streaming.
 	}
 
-	return destination;
-};
+
+	pipe (destination, options) {
+
+		const includeHistorySince = options && options.includeHistorySince;
+
+		if (includeHistorySince != undefined) {
+
+			// TODO: Does not exist on PassThrough.
+			// // Buffer incoming updates until done with disk.
+			// super.cork();
+
+			// Read past updates from disk.
+			const fileStream = fs.createReadStream(this.path);
+
+			fileStream
+				.pipe(new JsonStreamDeSerializer())
+				.pipe(new JsonStreamDbHistoryFilter(includeHistorySince))
+	 			.pipe(destination, {end: false}) // Don't close destination. Not done writing yet.
+	 		;
+
+			// Pipe future (and corked) events to destination.
+			fileStream
+				.once('end', _ => {
+
+					PassThrough.prototype.pipe.apply(this, [destination, options]);
+
+					// TODO: Does not exist on PassThrough.
+					// // Stop buffering and flush.
+					// this.uncork();
+				});
+
+		} else {
+
+			// Just pass through.
+			PassThrough.prototype.pipe.apply(this, [destination, options]);
+		}
+
+		return destination;
+	}
 
 
-JsonStreamDb.prototype.update = function (topic, uuid, data) {
+	update (topic, uuid, data) {
 
-	this.write(JsonStreamDb.makeEvent('set', topic, uuid, data));
-};
-
-
-JsonStreamDb.prototype.delete = function (topic, uuid) {
-
-	this.write(JsonStreamDb.makeEvent('del', topic, uuid));
-};
+		this.write(JsonStreamDb.makeEvent('set', topic, uuid, data));
+	}
 
 
-JsonStreamDb.makeEvent = function (type, topic, uuid, data) {
+	delete (topic, uuid) {
 
-	// TODO: Throw on missing arguments.
+		this.write(JsonStreamDb.makeEvent('del', topic, uuid));
+	}
 
-	return {
-		type: type,
-		uuid: uuid,
-		topic: topic,
-		data: data
-	};
-};
+
+	// TODO: Remove this? Typing is awkward.
+	static makeEvent (type, topic, uuid, data?) {
+
+		// TODO: Throw on missing arguments.
+
+		return {
+			type: type,
+			uuid: uuid,
+			topic: topic,
+			data: data
+		};
+	}
+
+}
