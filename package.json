@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/geon/jsonstreamdb",
   "dependencies": {
-    "uuid": "^2.0.1",
-    "byline": "^4.2.1"
+    "uuid": "^2.0.1"
   }
 }

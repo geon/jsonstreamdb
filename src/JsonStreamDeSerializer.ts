@@ -2,7 +2,7 @@
 
 export default JsonStreamDeSerializer;
 
-import {LineStream} from 'byline';
+import LineStream from './LineStream';
 import {Transform} from 'stream';
 
 function JsonStreamDeSerializer (options?) {
