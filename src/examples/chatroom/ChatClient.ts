@@ -2,7 +2,7 @@
 
 import * as uuid from 'uuid';
 import {Transform} from 'stream';
-import JsonStreamDb from '../../JsonStreamDb.js';
+import JsonStreamDb from '../../JsonStreamDb';
 
 
 export default ChatClient;

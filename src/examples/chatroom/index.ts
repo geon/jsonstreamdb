@@ -1,13 +1,13 @@
 /// <reference path="typings/node.d.ts" />
 
-import JsonStreamDb from '../../JsonStreamDb.js';
+import JsonStreamDb from '../../JsonStreamDb';
 
 import http from 'http';
 import * as fs from 'fs';
 import {server as WebSocketServer} from websocket;
-import WebsocketStream from './WebsocketStream.js';
+import WebsocketStream from './WebsocketStream';
 
-import ChatClient from './ChatClient.js';
+import ChatClient from './ChatClient';
 
 
 // Serve the client static file.
