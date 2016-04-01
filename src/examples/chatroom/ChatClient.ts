@@ -1,3 +1,4 @@
+/// <reference path="typings/node.d.ts" />
 
 import * as uuid from 'uuid';
 import {Transform} from 'stream';

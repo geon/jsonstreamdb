@@ -1,3 +1,4 @@
+/// <reference path="typings/node.d.ts" />
 
 export default WebsocketStream;
 
