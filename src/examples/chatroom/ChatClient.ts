@@ -29,7 +29,7 @@ function ChatClient (db, websocketStream) {
 }
 
 
-function FromWebsocketToDb (clientId, options) {
+function FromWebsocketToDb (clientId, options?) {
 
 	options = options || {};
 	options.objectMode = true;

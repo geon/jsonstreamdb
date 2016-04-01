@@ -5,7 +5,7 @@ export default WebsocketStream;
 import {Duplex} from 'stream';
 
 
-function WebsocketStream (websocket, options) {
+function WebsocketStream (websocket, options?) {
 
 	options = options || {};
 	options.objectMode = true;
