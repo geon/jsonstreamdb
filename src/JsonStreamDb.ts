@@ -37,7 +37,7 @@ function JsonStreamDb (path, options) {
 				.pipe(new JsonStreamDbSerialCounter(this.lastSerial))
 				// Write incoming updates to disk.
 				.pipe(new JsonStreamSerializer())
-				.pipe(new fs.createWriteStream(this.path, {'flags': 'a'}));
+				.pipe(fs.createWriteStream(this.path, {'flags': 'a'}));
 
 			// Stop buffering and flush.
 			this.uncork();
