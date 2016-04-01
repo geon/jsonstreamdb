@@ -1,7 +1,8 @@
 {
 	"compilerOptions": {
 		"outDir": "dist",
-		"allowJs": true
+		"allowJs": false,
+		"pretty": true
 	},
 	"files": [
 		"index.ts"
