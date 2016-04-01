@@ -5,7 +5,7 @@ export default JsonStreamDeSerializer;
 import {LineStream} from 'byline';
 import {Transform} from 'stream';
 
-function JsonStreamDeSerializer (options) {
+function JsonStreamDeSerializer (options?) {
 
 	options = options || {};
 	options.objectMode = true;

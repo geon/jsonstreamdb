@@ -4,7 +4,7 @@ export default JsonStreamDbSerialCounter;
 
 import {Transform} from 'stream';
 
-function JsonStreamDbSerialCounter (lastSerial, options) {
+function JsonStreamDbSerialCounter (lastSerial, options?) {
 
 	this.lastSerial = lastSerial;
 

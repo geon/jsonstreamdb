@@ -4,7 +4,7 @@ export default JsonStreamDbHistoryFilter;
 
 import {Transform} from 'stream';
 
-function JsonStreamDbHistoryFilter (includeHistorySince, options) {
+function JsonStreamDbHistoryFilter (includeHistorySince, options?) {
 
 	this.includeHistorySince = includeHistorySince;
 
