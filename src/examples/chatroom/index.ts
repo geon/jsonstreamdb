@@ -2,7 +2,7 @@
 
 import JsonStreamDb from '../../JsonStreamDb';
 
-import http from 'http';
+import * as http from 'http';
 import * as fs from 'fs';
 import {server as WebSocketServer} from websocket;
 import WebsocketStream from './WebsocketStream';
