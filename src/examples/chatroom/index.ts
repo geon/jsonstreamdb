@@ -23,7 +23,7 @@ const db = new JsonStreamDb('chatlog.jsonstreamdb');
 
 
 // Set up the WS server.
-wsServer = new WebSocketServer({
+const wsServer = new WebSocketServer({
 	httpServer: httpServer,
 	autoAcceptConnections: true
 });
