@@ -16,7 +16,7 @@ class JsonStreamDb extends PassThrough {
 	lastSerial: number;
 
 
-	constructor (path, options) {
+	constructor (path, options?) {
 
 		options = options || {};
 		options.objectMode = true;
