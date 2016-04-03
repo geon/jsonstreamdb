@@ -4,7 +4,7 @@ import JsonStreamDb from '../../JsonStreamDb';
 
 import * as http from 'http';
 import * as fs from 'fs';
-import {server as WebSocketServer} from websocket;
+import {server as WebSocketServer} from './node_modules/websocket/index';
 import WebsocketStream from './WebsocketStream';
 
 import ChatClient from './ChatClient';
