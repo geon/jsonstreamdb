@@ -79,7 +79,7 @@ class JsonStreamDb extends PassThrough {
 			fileStream
 				.once('end', _ => {
 
-					PassThrough.prototype.pipe.apply(this, [destination, options]);
+					super.pipe.apply(this, [destination, options]);
 
 					// TODO: Does not exist on PassThrough.
 					// // Stop buffering and flush.
@@ -89,7 +89,7 @@ class JsonStreamDb extends PassThrough {
 		} else {
 
 			// Just pass through.
-			PassThrough.prototype.pipe.apply(this, [destination, options]);
+			super.pipe.apply(this, [destination, options]);
 		}
 
 		return destination;
