@@ -5,6 +5,8 @@
 		"pretty": true
 	},
 	"files": [
-		"src/index.ts"
+		"src/examples/chatroom/index.ts",
+		"src/index.ts",
+		"src/typings/index.d.ts"
 	]
 }

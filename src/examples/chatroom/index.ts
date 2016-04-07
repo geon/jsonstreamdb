@@ -1,10 +1,9 @@
-/// <reference path="../../typings/node.d.ts" />
 
 import JsonStreamDb from '../../JsonStreamDb';
 
 import * as http from 'http';
 import * as fs from 'fs';
-import {server as WebSocketServer} from './node_modules/websocket/index';
+import {server as WebSocketServer} from 'websocket';
 import WebsocketStream from './WebsocketStream';
 
 import ChatClient from './ChatClient';

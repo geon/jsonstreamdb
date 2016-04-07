@@ -1,6 +1,5 @@
-/// <reference path="../../typings/node.d.ts" />
 
-import * as uuid from '../../../node_modules/uuid/uuid';
+import * as uuid from 'uuid';
 import {Transform} from 'stream';
 import JsonStreamDb from '../../JsonStreamDb';
 
