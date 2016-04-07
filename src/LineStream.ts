@@ -25,9 +25,8 @@
 
 import {Transform, Readable} from 'stream';
 
-export default LineStream;
 
-class LineStream extends Transform {
+export default class LineStream extends Transform {
 
 	_lineBuffer: Array<string>;
 	_lastChunkEndedWithCR: boolean;

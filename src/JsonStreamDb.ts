@@ -1,6 +1,4 @@
 
-export default JsonStreamDb;
-
 import {PassThrough} from 'stream';
 import * as fs from 'fs';
 import JsonStreamSerializer from './JsonStreamSerializer';
@@ -9,7 +7,7 @@ import JsonStreamDbHistoryFilter from './JsonStreamDbHistoryFilter';
 import JsonStreamDbSerialCounter from './JsonStreamDbSerialCounter';
 
 
-class JsonStreamDb extends PassThrough {
+export default class JsonStreamDb extends PassThrough {
 
 	path: string;
 	lastSerial: number;
