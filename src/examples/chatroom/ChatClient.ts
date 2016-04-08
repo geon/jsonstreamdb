@@ -4,65 +4,72 @@ import {Transform} from 'stream';
 import JsonStreamDb from '../../JsonStreamDb';
 
 
-export default ChatClient;
+export default class ChatClient {
+
+	uuid: string;
 
 
-function ChatClient (db, websocketStream) {
+	constructor (db, websocketStream) {
 
-	this.uuid = uuid.v4();
+		this.uuid = uuid.v4();
 
-	websocketStream
-		.pipe(new FromWebsocketToDb(this.uuid))
-		.pipe(db)
-	;
+		websocketStream
+			.pipe(new FromWebsocketToDb(this.uuid))
+			.pipe(db)
+		;
 
-	db
-		.pipe(websocketStream, {includeHistorySince: 0})
-	;
+		db
+			.pipe(websocketStream, {includeHistorySince: 0})
+		;
 
-	db.update('clients', this.uuid, {time: new Date()});
-	websocketStream.on('end', _ => {
+		db.update('clients', this.uuid, {time: new Date()});
+		websocketStream.on('end', _ => {
 
-		db.delete('clients', this.uuid);
-	});
+			db.delete('clients', this.uuid);
+		});
+	}
 }
 
 
-function FromWebsocketToDb (clientId, options?) {
+class FromWebsocketToDb extends Transform {
 
-	options = options || {};
-	options.objectMode = true;
-
-	Transform.apply(this, [options]);
-
-	this.clientId = clientId;
-}
+	clientId: string;
 
 
-FromWebsocketToDb.prototype.__proto__ = Transform.prototype;
+	constructor (clientId, options?) {
 
+		options = options || {};
+		options.objectMode = true;
 
-FromWebsocketToDb.prototype._transform = function (message, options, callback) {
+		super(options);
 
-	switch (message.type) {
-
-		case 'say':
-			this.push(JsonStreamDb.makeEvent(
-				'add',
-				'lines',
-				uuid.v4(),
-				{
-					time: new Date(),
-					clientId: this.clientId,
-					line: message.line
-				}
-			));
-			break;
-
-		default:
-			console.error(new Date(), 'Unknown message type:', message);
-			break;
+		this.clientId = clientId;
 	}
 
-	callback();
-};
+
+	_transform (message, options, callback) {
+
+		switch (message.type) {
+
+			case 'say':
+				super.push(JsonStreamDb.makeEvent(
+					'add',
+					'lines',
+					uuid.v4(),
+					{
+						time: new Date(),
+						clientId: this.clientId,
+						line: message.line
+					}
+				));
+				break;
+
+			default:
+				console.error(new Date(), 'Unknown message type:', message);
+				break;
+		}
+
+		callback();
+	}
+
+}

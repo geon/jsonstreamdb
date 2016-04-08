@@ -1,42 +1,45 @@
 
-export default WebsocketStream;
-
 import {Duplex} from 'stream';
+import {connection as WebSocketConnection} from 'websocket';
 
 
-function WebsocketStream (websocket, options?) {
+export default class WebsocketStream extends Duplex {
 
-	options = options || {};
-	options.objectMode = true;
+	websocket: WebSocketConnection;
 
-	Duplex.apply(this, [options]);
 
-	this.websocket = websocket;
+	constructor (websocket, options?) {
 
-	this.websocket.on('message', data => {
+		options = options || {};
+		options.objectMode = true;
 
-		this.push(JSON.parse(data.utf8Data));
-	});
+		super(options);
 
-	this.websocket.on('close', (reasonCode, description) => {
+		this.websocket = websocket;
 
-		this.end();
-	});
+		this.websocket.on('message', data => {
+
+			super.push(JSON.parse(data.utf8Data));
+		});
+
+		this.websocket.on('close', (reasonCode, description) => {
+
+			super.end();
+		});
+	}
+
+
+	_write (chunk, encoding, callback) {
+
+		this.websocket.send(JSON.stringify(chunk));
+
+		callback();
+	}
+
+
+	_read (size) {
+
+		// Nothing to do here... The data is pushed in the constructor.
+	}
+
 }
-
-
-WebsocketStream.prototype.__proto__ = Duplex.prototype;
-
-
-WebsocketStream.prototype._write = function (chunk, encoding, callback) {
-
-	this.websocket.send(JSON.stringify(chunk));
-
-	callback();
-};
-
-
-WebsocketStream.prototype._read = function (size) {
-
-	// Nothing to do here... The data is pushed in the constructor.
-};

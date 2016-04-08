@@ -1,34 +1,33 @@
 
-export default JsonStreamDeSerializer;
-
 import LineStream from './LineStream';
 import {Transform} from 'stream';
 
-function JsonStreamDeSerializer (options?) {
+export default class JsonStreamDeSerializer extends Transform {
 
-	options = options || {};
-	options.objectMode = true;
+	constructor (options?) {
 
-	Transform.apply(this, [options]);
+		options = options || {};
+		options.objectMode = true;
 
-	const splitToLines = new LineStream();
+		super(options);
 
-	splitToLines.pipe(this);
+		const splitToLines = new LineStream();
 
-	// Redirect any piping to the internal pipe-chain.
-	this.on('pipe', source => {
+		splitToLines.pipe(this);
 
-		source.unpipe(this);
-		source.pipe(splitToLines);
-	});
+		// Redirect any piping to the internal pipe-chain.
+		this.on('pipe', source => {
+
+			source.unpipe(this);
+			source.pipe(splitToLines);
+		});
+	}
+
+
+	_transform (chunk, options, callback) {
+
+		this.push(JSON.parse(chunk.toString()));
+		callback();
+	}
+
 }
-
-
-JsonStreamDeSerializer.prototype.__proto__ = Transform.prototype;
-
-
-JsonStreamDeSerializer.prototype._transform = function (chunk, options, callback) {
-
-	this.push(JSON.parse(chunk.toString()));
-	callback();
-};

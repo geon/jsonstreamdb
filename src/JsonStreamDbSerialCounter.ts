@@ -1,27 +1,29 @@
 
-export default JsonStreamDbSerialCounter;
-
 import {Transform} from 'stream';
 
-function JsonStreamDbSerialCounter (lastSerial, options?) {
+export default class JsonStreamDbSerialCounter extends Transform {
 
-	this.lastSerial = lastSerial;
+	lastSerial: number;
 
-	options = options || {};
-	options.objectMode = true;
 
-	Transform.apply(this, [options]);
+	constructor (lastSerial, options?) {
+
+		options = options || {};
+		options.objectMode = true;
+
+		super(options);
+
+		this.lastSerial = lastSerial;
+	}
+
+
+	_transform (chunk, options, callback) {
+
+		++this.lastSerial;
+		chunk.serial = this.lastSerial;
+		this.push(chunk);
+
+		callback();
+	}
+
 }
-
-
-JsonStreamDbSerialCounter.prototype.__proto__ = Transform.prototype;
-
-
-JsonStreamDbSerialCounter.prototype._transform = function (chunk, options, callback) {
-
-	++this.lastSerial;
-	chunk.serial = this.lastSerial;
-	this.push(chunk);
-
-	callback();
-};

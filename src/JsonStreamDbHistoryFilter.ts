@@ -1,29 +1,31 @@
 
-export default JsonStreamDbHistoryFilter;
-
 import {Transform} from 'stream';
 
-function JsonStreamDbHistoryFilter (includeHistorySince, options?) {
+export default class JsonStreamDbHistoryFilter extends Transform {
 
-	this.includeHistorySince = includeHistorySince;
-
-	options = options || {};
-	options.objectMode = true;
-
-	Transform.apply(this, [options]);
-}
+	includeHistorySince: number;
 
 
-JsonStreamDbHistoryFilter.prototype.__proto__ = Transform.prototype;
+	constructor (includeHistorySince, options?) {
 
+		options = options || {};
+		options.objectMode = true;
 
-JsonStreamDbHistoryFilter.prototype._transform = function (chunk, options, callback) {
+		super(options);
 
-	// Ignore all events before includeHistorySince.
-	if (chunk.serial >= this.includeHistorySince) {
-
-		this.push(chunk);
+		this.includeHistorySince = includeHistorySince;
 	}
 
-	callback();
-};
+
+	_transform (chunk, options, callback) {
+
+		// Ignore all events before includeHistorySince.
+		if (chunk.serial >= this.includeHistorySince) {
+
+			this.push(chunk);
+		}
+
+		callback();
+	}
+
+}
