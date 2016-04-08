@@ -54,7 +54,7 @@ export default class JsonStreamDb extends PassThrough {
 	}
 
 
-	pipe (destination, options) {
+	pipe (destination, options?) {
 
 		const includeHistorySince = options && options.includeHistorySince;
 
@@ -94,20 +94,20 @@ export default class JsonStreamDb extends PassThrough {
 	}
 
 
-	update (topic, uuid, data) {
+	// TODO: Make data a Map<string, any>.
+	update (topic: string, uuid: string, data) {
 
 		super.write(JsonStreamDb.makeEvent('set', topic, uuid, data));
 	}
 
 
-	delete (topic, uuid) {
+	delete (topic: string, uuid: string) {
 
 		super.write(JsonStreamDb.makeEvent('del', topic, uuid));
 	}
 
 
-	// TODO: Remove this? Typing is awkward.
-	static makeEvent (type, topic, uuid, data?) {
+	static makeEvent (type: 'set' | 'del', topic: string, uuid: string, data?) {
 
 		// TODO: Throw on missing arguments.
 
