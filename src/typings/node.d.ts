@@ -166,6 +166,8 @@ declare var Buffer: {
 *                                               *
 ************************************************/
 declare namespace NodeJS {
+	import {WritableStream, ReadableStream} from 'stream';
+
     export interface ErrnoException extends Error {
         errno?: number;
         code?: string;
@@ -187,30 +189,6 @@ declare namespace NodeJS {
         listenerCount(type: string): number;
     }
 
-    export interface ReadableStream extends EventEmitter {
-        readable: boolean;
-        read(size?: number): string|Buffer;
-        setEncoding(encoding: string): void;
-        pause(): void;
-        resume(): void;
-        pipe<T extends WritableStream>(destination: T, options?: { end?: boolean; }): T;
-        unpipe<T extends WritableStream>(destination?: T): void;
-        unshift(chunk: string): void;
-        unshift(chunk: Buffer): void;
-        wrap(oldStream: ReadableStream): ReadableStream;
-    }
-
-    export interface WritableStream extends EventEmitter {
-        writable: boolean;
-        write(buffer: Buffer|string, cb?: Function): boolean;
-        write(str: string, encoding?: string, cb?: Function): boolean;
-        end(): void;
-        end(buffer: Buffer, cb?: Function): void;
-        end(str: string, cb?: Function): void;
-        end(str: string, encoding?: string, cb?: Function): void;
-    }
-
-    export interface ReadWriteStream extends ReadableStream, WritableStream {}
 
     export interface Events extends EventEmitter { }
 
@@ -869,8 +847,8 @@ declare module "repl" {
 
     export interface ReplOptions {
         prompt?: string;
-        input?: NodeJS.ReadableStream;
-        output?: NodeJS.WritableStream;
+        input?: stream.ReadableStream;
+        output?: stream.WritableStream;
         terminal?: boolean;
         eval?: Function;
         useColors?: boolean;
@@ -914,20 +892,20 @@ declare module "readline" {
     }
 
     export interface ReadLineOptions {
-        input: NodeJS.ReadableStream;
-        output?: NodeJS.WritableStream;
+        input: stream.ReadableStream;
+        output?: stream.WritableStream;
         completer?: Completer;
         terminal?: boolean;
         historySize?: number;
     }
 
-    export function createInterface(input: NodeJS.ReadableStream, output?: NodeJS.WritableStream, completer?: Completer, terminal?: boolean): ReadLine;
+    export function createInterface(input: stream.ReadableStream, output?: stream.WritableStream, completer?: Completer, terminal?: boolean): ReadLine;
     export function createInterface(options: ReadLineOptions): ReadLine;
 
-    export function cursorTo(stream: NodeJS.WritableStream, x: number, y: number): void;
-    export function moveCursor(stream: NodeJS.WritableStream, dx: number|string, dy: number|string): void;
-    export function clearLine(stream: NodeJS.WritableStream, dir: number): void;
-    export function clearScreenDown(stream: NodeJS.WritableStream): void;
+    export function cursorTo(stream: stream.WritableStream, x: number, y: number): void;
+    export function moveCursor(stream: stream.WritableStream, dx: number|string, dy: number|string): void;
+    export function clearLine(stream: stream.WritableStream, dir: number): void;
+    export function clearScreenDown(stream: stream.WritableStream): void;
 }
 
 declare module "vm" {
@@ -1802,6 +1780,7 @@ declare module "tls" {
 }
 
 declare module "crypto" {
+	import {ReadWriteStream, WritableStream} from 'stream';
     export interface CredentialDetails {
         pfx: string;
         key: string;
@@ -1822,7 +1801,7 @@ declare module "crypto" {
         digest(encoding: string): any;
         digest(): Buffer;
     }
-    export interface Hmac extends NodeJS.ReadWriteStream {
+    export interface Hmac extends ReadWriteStream {
         update(data: any, input_encoding?: string): Hmac;
         digest(encoding: 'buffer'): Buffer;
         digest(encoding: string): any;
@@ -1830,7 +1809,7 @@ declare module "crypto" {
     }
     export function createCipher(algorithm: string, password: any): Cipher;
     export function createCipheriv(algorithm: string, key: any, iv: any): Cipher;
-    export interface Cipher extends NodeJS.ReadWriteStream {
+    export interface Cipher extends ReadWriteStream {
         update(data: Buffer): Buffer;
         update(data: string, input_encoding: "utf8"|"ascii"|"binary"): Buffer;
         update(data: Buffer, input_encoding: any, output_encoding: "binary"|"base64"|"hex"): string;
@@ -1842,7 +1821,7 @@ declare module "crypto" {
     }
     export function createDecipher(algorithm: string, password: any): Decipher;
     export function createDecipheriv(algorithm: string, key: any, iv: any): Decipher;
-    export interface Decipher extends NodeJS.ReadWriteStream {
+    export interface Decipher extends ReadWriteStream {
         update(data: Buffer): Buffer;
         update(data: string, input_encoding: "binary"|"base64"|"hex"): Buffer;
         update(data: Buffer, input_encoding: any, output_encoding: "utf8"|"ascii"|"binary"): string;
@@ -1853,12 +1832,12 @@ declare module "crypto" {
         setAuthTag(tag: Buffer): void;
     }
     export function createSign(algorithm: string): Signer;
-    export interface Signer extends NodeJS.WritableStream {
+    export interface Signer extends WritableStream {
         update(data: any): void;
         sign(private_key: string, output_format: string): string;
     }
     export function createVerify(algorith: string): Verify;
-    export interface Verify extends NodeJS.WritableStream {
+    export interface Verify extends WritableStream {
         update(data: any): void;
         verify(object: string, signature: string, signature_format?: string): boolean;
     }
@@ -1899,8 +1878,33 @@ declare module "crypto" {
 declare module "stream" {
     import * as events from "events";
 
+    export interface ReadableStream extends NodeJS.EventEmitter {
+        readable: boolean;
+        read(size?: number): string|Buffer;
+        setEncoding(encoding: string): void;
+        pause(): void;
+        resume(): void;
+        pipe<T extends WritableStream>(destination: T, options?: { end?: boolean; }): T;
+        unpipe<T extends WritableStream>(destination?: T): void;
+        unshift(chunk: string): void;
+        unshift(chunk: Buffer): void;
+        wrap(oldStream: ReadableStream): ReadableStream;
+    }
+
+    export interface WritableStream extends NodeJS.EventEmitter {
+        writable: boolean;
+        write(buffer: Buffer|string, cb?: Function): boolean;
+        write(str: string, encoding?: string, cb?: Function): boolean;
+        end(): void;
+        end(buffer: Buffer, cb?: Function): void;
+        end(str: string, cb?: Function): void;
+        end(str: string, encoding?: string, cb?: Function): void;
+    }
+
+    export interface ReadWriteStream extends ReadableStream, WritableStream {}
+
     export class Stream extends events.EventEmitter {
-        pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
+        pipe<T extends WritableStream>(destination: T, options?: { end?: boolean; }): T;
     }
 
     export interface ReadableOptions {
@@ -1909,7 +1913,7 @@ declare module "stream" {
         objectMode?: boolean;
     }
 
-    export class Readable extends events.EventEmitter implements NodeJS.ReadableStream {
+    export class Readable extends events.EventEmitter implements ReadableStream {
         readable: boolean;
         constructor(opts?: ReadableOptions);
         _read(size: number): void;
@@ -1917,10 +1921,10 @@ declare module "stream" {
         setEncoding(encoding: string): void;
         pause(): void;
         resume(): void;
-        pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
-        unpipe<T extends NodeJS.WritableStream>(destination?: T): void;
+        pipe<T extends WritableStream>(destination: T, options?: { end?: boolean; }): T;
+        unpipe<T extends WritableStream>(destination?: T): void;
         unshift(chunk: any): void;
-        wrap(oldStream: NodeJS.ReadableStream): NodeJS.ReadableStream;
+        wrap(oldStream: ReadableStream): ReadableStream;
         push(chunk: any, encoding?: string): boolean;
     }
 
@@ -1930,7 +1934,7 @@ declare module "stream" {
         objectMode?: boolean;
     }
 
-    export class Writable extends events.EventEmitter implements NodeJS.WritableStream {
+    export class Writable extends events.EventEmitter implements WritableStream {
         writable: boolean;
         constructor(opts?: WritableOptions);
         _write(chunk: any, encoding: string, callback: Function): void;
@@ -1948,7 +1952,7 @@ declare module "stream" {
     }
 
     // Note: Duplex extends both Readable and Writable.
-    export class Duplex extends Readable implements NodeJS.ReadWriteStream {
+    export class Duplex extends Readable implements ReadWriteStream {
         writable: boolean;
         constructor(opts?: DuplexOptions);
         _write(chunk: any, encoding: string, callback: Function): void;
@@ -1964,7 +1968,7 @@ declare module "stream" {
     export interface TransformOptions extends ReadableOptions, WritableOptions {}
 
     // Note: Transform lacks the _read and _write methods of Readable/Writable.
-    export class Transform extends events.EventEmitter implements NodeJS.ReadWriteStream {
+    export class Transform extends events.EventEmitter implements ReadWriteStream {
         readable: boolean;
         writable: boolean;
         constructor(opts?: TransformOptions);
@@ -1974,10 +1978,10 @@ declare module "stream" {
         setEncoding(encoding: string): void;
         pause(): void;
         resume(): void;
-        pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean; }): T;
-        unpipe<T extends NodeJS.WritableStream>(destination?: T): void;
+        pipe<T extends WritableStream>(destination: T, options?: { end?: boolean; }): T;
+        unpipe<T extends WritableStream>(destination?: T): void;
         unshift(chunk: any): void;
-        wrap(oldStream: NodeJS.ReadableStream): NodeJS.ReadableStream;
+        wrap(oldStream: ReadableStream): ReadableStream;
         push(chunk: any, encoding?: string): boolean;
         write(chunk: any, cb?: Function): boolean;
         write(chunk: any, encoding?: string, cb?: Function): boolean;

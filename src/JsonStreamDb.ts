@@ -1,5 +1,5 @@
 
-import {PassThrough} from 'stream';
+import {PassThrough, WritableStream} from 'stream';
 import * as fs from 'fs';
 import JsonStreamSerializer from './JsonStreamSerializer';
 import JsonStreamDeSerializer from './JsonStreamDeSerializer';
@@ -54,7 +54,7 @@ export default class JsonStreamDb extends PassThrough {
 	}
 
 
-	pipe (destination, options?) {
+	pipe (destination: WritableStream, options?) {
 
 		const includeHistorySince = options && options.includeHistorySince;
 
