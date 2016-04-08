@@ -1936,6 +1936,8 @@ declare module "stream" {
         _write(chunk: any, encoding: string, callback: Function): void;
         write(chunk: any, cb?: Function): boolean;
         write(chunk: any, encoding?: string, cb?: Function): boolean;
+		cork():void;
+		uncork():void;
         end(): void;
         end(chunk: any, cb?: Function): void;
         end(chunk: any, encoding?: string, cb?: Function): void;
@@ -1952,6 +1954,8 @@ declare module "stream" {
         _write(chunk: any, encoding: string, callback: Function): void;
         write(chunk: any, cb?: Function): boolean;
         write(chunk: any, encoding?: string, cb?: Function): boolean;
+		cork():void;
+		uncork():void;
         end(): void;
         end(chunk: any, cb?: Function): void;
         end(chunk: any, encoding?: string, cb?: Function): void;
