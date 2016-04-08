@@ -2,7 +2,7 @@
 import * as uuid from 'uuid';
 import {Transform} from 'stream';
 import JsonStreamDb from '../../JsonStreamDb';
-import WebsocketStream from './WebsocketStream';
+import WebsocketStream from './WebsocketStream'; 
 import JsonStreamDbEvent from '../../JsonStreamDbEvent';
 
 
@@ -55,7 +55,7 @@ class FromWebsocketToDb extends Transform {
 
 			case 'say':
 				super.push(new JsonStreamDbEvent(
-					'add',
+					'set',
 					'lines',
 					uuid.v4(),
 					{
