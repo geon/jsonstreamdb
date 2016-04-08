@@ -1,9 +1,10 @@
 
 import {Transform} from 'stream';
+import JsonStreamDbEvent from './JsonStreamDbEvent';
 
 export default class JsonStreamSerializer extends Transform {
 
-	constructor (options?) {
+	constructor (options?: any) {
 
 		options = options || {};
 		options.objectMode = true;
@@ -12,7 +13,7 @@ export default class JsonStreamSerializer extends Transform {
 	}
 
 
-	_transform (chunk, options, callback) {
+	_transform (chunk: JsonStreamDbEvent, encoding: string, callback: Function) {
 
 		this.push(JSON.stringify(chunk) + "\n");
 		callback();

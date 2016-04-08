@@ -2,6 +2,8 @@
 import * as uuid from 'uuid';
 import {Transform} from 'stream';
 import JsonStreamDb from '../../JsonStreamDb';
+import WebsocketStream from './WebsocketStream';
+import JsonStreamDbEvent from '../../JsonStreamDbEvent';
 
 
 export default class ChatClient {
@@ -9,7 +11,7 @@ export default class ChatClient {
 	uuid: string;
 
 
-	constructor (db, websocketStream) {
+	constructor (db: JsonStreamDb, websocketStream: WebsocketStream) {
 
 		this.uuid = uuid.v4();
 
@@ -23,7 +25,7 @@ export default class ChatClient {
 		;
 
 		db.update('clients', this.uuid, {time: new Date()});
-		websocketStream.on('end', _ => {
+		websocketStream.on('end', () => {
 
 			db.delete('clients', this.uuid);
 		});
@@ -36,7 +38,7 @@ class FromWebsocketToDb extends Transform {
 	clientId: string;
 
 
-	constructor (clientId, options?) {
+	constructor (clientId: string, options?: any) {
 
 		options = options || {};
 		options.objectMode = true;
@@ -47,12 +49,12 @@ class FromWebsocketToDb extends Transform {
 	}
 
 
-	_transform (message, options, callback) {
+	_transform (message:any, encoding: string, callback: Function) {
 
 		switch (message.type) {
 
 			case 'say':
-				super.push(JsonStreamDb.makeEvent(
+				super.push(new JsonStreamDbEvent(
 					'add',
 					'lines',
 					uuid.v4(),

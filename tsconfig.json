@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"noImplicitAny": true,
 		// "outDir": "dist",
 		"allowJs": false,
 		"pretty": true

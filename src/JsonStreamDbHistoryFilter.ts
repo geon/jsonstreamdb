@@ -1,12 +1,13 @@
 
 import {Transform} from 'stream';
+import JsonStreamDbEvent from './JsonStreamDbEvent';
 
 export default class JsonStreamDbHistoryFilter extends Transform {
 
 	includeHistorySince: number;
 
 
-	constructor (includeHistorySince, options?) {
+	constructor (includeHistorySince: number, options?: any) {
 
 		options = options || {};
 		options.objectMode = true;
@@ -17,7 +18,7 @@ export default class JsonStreamDbHistoryFilter extends Transform {
 	}
 
 
-	_transform (chunk, options, callback) {
+	_transform (chunk: JsonStreamDbEvent, encoding: string, callback: Function) {
 
 		// Ignore all events before includeHistorySince.
 		if (chunk.serial >= this.includeHistorySince) {

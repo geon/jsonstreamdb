@@ -1,6 +1,7 @@
 
 import {PassThrough} from 'stream';
 import * as fs from 'fs';
+import JsonStreamDbEvent from './JsonStreamDbEvent';
 import JsonStreamSerializer from './JsonStreamSerializer';
 import JsonStreamDeSerializer from './JsonStreamDeSerializer';
 import JsonStreamDbHistoryFilter from './JsonStreamDbHistoryFilter';
@@ -13,7 +14,7 @@ export default class JsonStreamDb extends PassThrough {
 	lastSerial: number;
 
 
-	constructor (path, options?) {
+	constructor (path: string, options?: any) {
 
 		options = options || {};
 		options.objectMode = true;
@@ -31,11 +32,11 @@ export default class JsonStreamDb extends PassThrough {
 		this.lastSerial = 0;
 		fs.createReadStream(this.path)
 			.pipe(new JsonStreamDeSerializer())
-			.on('data', event => {
+			.on('data', (event: JsonStreamDbEvent) => {
 
 				this.lastSerial = event.serial;
 			})
-			.once('end', _ => {
+			.once('end', () => {
 
 				// Append coming updates to disk.
 				super
@@ -54,7 +55,8 @@ export default class JsonStreamDb extends PassThrough {
 	}
 
 
-	pipe (destination, options) {
+	// TODO: Fix the any. The WriteStream interface from the node typings?
+	pipe (destination: any, options: any) {
 
 		const includeHistorySince = options && options.includeHistorySince;
 
@@ -75,7 +77,7 @@ export default class JsonStreamDb extends PassThrough {
 
 			// Pipe future (and corked) events to destination.
 			fileStream
-				.once('end', _ => {
+				.once('end', () => {
 
 					super.pipe.apply(this, [destination, options]);
 
@@ -94,29 +96,15 @@ export default class JsonStreamDb extends PassThrough {
 	}
 
 
-	update (topic, uuid, data) {
+	update (topic: string, uuid: string, data: Object) {
 
-		super.write(JsonStreamDb.makeEvent('set', topic, uuid, data));
+		super.write(new JsonStreamDbEvent('set', topic, uuid, data));
 	}
 
 
-	delete (topic, uuid) {
+	delete (topic: string, uuid: string) {
 
-		super.write(JsonStreamDb.makeEvent('del', topic, uuid));
-	}
-
-
-	// TODO: Remove this? Typing is awkward.
-	static makeEvent (type, topic, uuid, data?) {
-
-		// TODO: Throw on missing arguments.
-
-		return {
-			type: type,
-			uuid: uuid,
-			topic: topic,
-			data: data
-		};
+		super.write(new JsonStreamDbEvent('del', topic, uuid));
 	}
 
 }

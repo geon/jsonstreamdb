@@ -1,12 +1,13 @@
 
 import {Transform} from 'stream';
+import JsonStreamDbEvent from './JsonStreamDbEvent';
 
 export default class JsonStreamDbSerialCounter extends Transform {
 
 	lastSerial: number;
 
 
-	constructor (lastSerial, options?) {
+	constructor (lastSerial: number, options?: any) {
 
 		options = options || {};
 		options.objectMode = true;
@@ -17,7 +18,7 @@ export default class JsonStreamDbSerialCounter extends Transform {
 	}
 
 
-	_transform (chunk, options, callback) {
+	_transform (chunk: JsonStreamDbEvent, encoding: string, callback: Function) {
 
 		++this.lastSerial;
 		chunk.serial = this.lastSerial;

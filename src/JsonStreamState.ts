@@ -1,13 +1,14 @@
 
 import {Writable} from 'stream';
+import JsonStreamDbEvent from './JsonStreamDbEvent';
 
 
 export default class JsonStreamState extends Writable {
 
-	// TODO: Change to Map.
-	topics: {};
+	// TODO: Change to Map<string, Map<string, any>>.
+	topics: {[key: string]: {[key: string]: any}};
 
-	constructor (options?) {
+	constructor (options?: any) {
 
 		options = options || {};
 		options.objectMode = true;
@@ -18,7 +19,7 @@ export default class JsonStreamState extends Writable {
 	}
 
 
-	_write (update, encoding, callback) {
+	_write (update: JsonStreamDbEvent, encoding: string, callback: Function) {
 
 		const objects = this.topics[update.topic] || (this.topics[update.topic] = {});
 

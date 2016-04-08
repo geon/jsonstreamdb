@@ -1,6 +1,7 @@
 
 import {Duplex} from 'stream';
 import {connection as WebSocketConnection} from 'websocket';
+import JsonStreamDbEvent from '../../JsonStreamDbEvent';
 
 
 export default class WebsocketStream extends Duplex {
@@ -8,7 +9,7 @@ export default class WebsocketStream extends Duplex {
 	websocket: WebSocketConnection;
 
 
-	constructor (websocket, options?) {
+	constructor (websocket: WebSocketConnection, options?: any) {
 
 		options = options || {};
 		options.objectMode = true;
@@ -29,15 +30,15 @@ export default class WebsocketStream extends Duplex {
 	}
 
 
-	_write (chunk, encoding, callback) {
+	_write (event: JsonStreamDbEvent, encoding: string, callback: Function) {
 
-		this.websocket.send(JSON.stringify(chunk));
+		this.websocket.send(JSON.stringify(event));
 
 		callback();
 	}
 
 
-	_read (size) {
+	_read (size: number) {
 
 		// Nothing to do here... The data is pushed in the constructor.
 	}

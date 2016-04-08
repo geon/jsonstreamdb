@@ -34,7 +34,7 @@ export default class LineStream extends Transform {
 	_chunkEncoding: string;
 
 
-	constructor (options?) {
+	constructor (options?: any) {
 
 		// use objectMode to stop the output from being buffered
 		// which re-concatanates the lines, just without newlines.
@@ -48,7 +48,7 @@ export default class LineStream extends Transform {
 	}
 
 
-	_transform (chunk, encoding, done) {
+	_transform (chunk: Buffer | string, encoding: string, done: Function) {
 
 		// decode binary chunks as UTF-8
 		encoding = encoding || 'utf8';
@@ -64,7 +64,7 @@ export default class LineStream extends Transform {
 		}
 		this._chunkEncoding = encoding;
 		
-		var lines = chunk.split(/\r\n|\r|\n/g);
+		var lines = (<string> chunk).split(/\r\n|\r|\n/g);
 		
 		// don't split CRLF which spans chunks
 		if (this._lastChunkEndedWithCR && chunk[0] == '\n') {
@@ -81,7 +81,7 @@ export default class LineStream extends Transform {
 		this._pushBuffer(encoding, 1, done);
 	}
 
-	_pushBuffer (encoding, keep, done) {
+	_pushBuffer (encoding: string, keep: number, done: Function) {
 
 		// always buffer the last (possibly partial) line
 		while (this._lineBuffer.length > keep) {
@@ -101,13 +101,13 @@ export default class LineStream extends Transform {
 		done();
 	}
 
-	_flush (done) {
+	_flush (done: Function) {
 
 		this._pushBuffer(this._chunkEncoding, 0, done);
 	}
 
 	// see Readable::push
-	_reencode (line, chunkEncoding) {
+	_reencode (line: string, chunkEncoding: string) {
 
 		return new Buffer(line, chunkEncoding);
 	}
