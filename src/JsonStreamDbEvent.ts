@@ -13,6 +13,7 @@ export default class JsonStreamDbEvent {
 	data: Data;
 
 
+	// TODO: Check input and throw if missing. This is typed, but data from disk will be `any`, so ignore it.
 	// TODO: Can this be overloaded?
 	// constructor (type: 'set', topic: string, uuid: string, data: any);
 	// constructor (type: 'del', topic: string, uuid: string);
