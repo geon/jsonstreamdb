@@ -16,6 +16,7 @@ export default class JsonStreamDbEvent {
 		type: 'set' | 'del',
 		topic: string,
 		uuid: string,
+		serial?: number,
 		data?: {[key: string]: any}
 	}) {
 
@@ -27,6 +28,7 @@ export default class JsonStreamDbEvent {
 		this.type = json.type;
 		this.topic = json.topic;
 		this.uuid = json.uuid;
+		this.serial = json.serial;
 		this.data = dataMap;
 	}
 
@@ -44,6 +46,7 @@ export default class JsonStreamDbEvent {
 			type: this.type,
 			topic: this.topic,
 			uuid: this.uuid,
+			serial: this.serial,
 			data: data
 		};
 	}
