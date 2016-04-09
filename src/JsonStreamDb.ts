@@ -72,6 +72,7 @@ export default class JsonStreamDb extends PassThrough {
 			fileStream
 				.pipe(new JsonStreamDeSerializer())
 				.pipe(new JsonStreamDbHistoryFilter(includeHistorySince))
+				// TODO: Include the same options as in the live stream.
 	 			.pipe(destination, {end: false}) // Don't close destination. Not done writing yet.
 	 		;
 
