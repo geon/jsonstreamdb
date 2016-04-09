@@ -20,6 +20,7 @@ export default class WebsocketStream extends Duplex {
 
 		this.websocket.on('message', data => {
 
+			// Still a raw json object, not an JsonStreamDbEvent.
 			super.push(JSON.parse(data.utf8Data));
 		});
 
