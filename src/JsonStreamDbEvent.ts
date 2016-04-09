@@ -17,12 +17,17 @@ export default class JsonStreamDbEvent {
 	// TODO: Can this be overloaded?
 	// constructor (type: 'set', topic: string, uuid: string, data: any);
 	// constructor (type: 'del', topic: string, uuid: string);
-	constructor (type: 'set' | 'del', topic: string, uuid: string, data?: Data) {
+	constructor (json: {
+		type: 'set' | 'del',
+		topic: string,
+		uuid: string,
+		data?: {[key: string]: any}
+	}) {
 
-		this.type = type;
-		this.topic = topic;
-		this.uuid = uuid;
-		this.data = data;
+               this.type = json.type;
+               this.topic = json.topic;
+               this.uuid = json.uuid;
+               this.data = json.data;
 	}
 
 }

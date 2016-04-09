@@ -98,13 +98,22 @@ export default class JsonStreamDb extends PassThrough {
 
 	update (topic: string, uuid: string, data: Object) {
 
-		super.write(new JsonStreamDbEvent('set', topic, uuid, data));
+		super.write(new JsonStreamDbEvent({
+			type:'set',
+			topic,
+			uuid,
+			data
+		}));
 	}
 
 
 	delete (topic: string, uuid: string) {
 
-		super.write(new JsonStreamDbEvent('del', topic, uuid));
+		super.write(new JsonStreamDbEvent({
+			type:'del',
+			topic,
+			uuid
+		}));
 	}
 
 }

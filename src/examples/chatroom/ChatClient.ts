@@ -54,16 +54,16 @@ class FromWebsocketToDb extends Transform {
 		switch (message.type) {
 
 			case 'say':
-				super.push(new JsonStreamDbEvent(
-					'set',
-					'lines',
-					uuid.v4(),
-					{
+				super.push(new JsonStreamDbEvent({
+					type: 'set',
+					topic: 'lines',
+					uuid: uuid.v4(),
+					data: {
 						time: new Date(),
 						clientId: this.clientId,
 						line: message.line
 					}
-				));
+				}));
 				break;
 
 			default:
