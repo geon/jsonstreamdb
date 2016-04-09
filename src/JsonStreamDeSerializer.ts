@@ -28,7 +28,7 @@ export default class JsonStreamDeSerializer extends Transform {
 
 	_transform (chunk: string, encoding: string, callback: Function) {
 
-		this.push(JSON.parse(chunk.toString()));
+		this.push(new JsonStreamDbEvent(JSON.parse(chunk.toString())));
 		callback();
 	}
 
