@@ -13,9 +13,9 @@ export default class JsonStreamSerializer extends Transform {
 	}
 
 
-	_transform (chunk: JsonStreamDbEvent, encoding: string, callback: Function) {
+	_transform (event: JsonStreamDbEvent, encoding: string, callback: Function) {
 
-		this.push(JSON.stringify(chunk) + "\n");
+		this.push(JSON.stringify(event) + "\n");
 		callback();
 	}
 
