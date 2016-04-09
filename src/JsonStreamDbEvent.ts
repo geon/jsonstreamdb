@@ -1,16 +1,11 @@
 
-// TODO: Change to Map.
-type Data = {
-	[key: string]: any;
-}
-
 export default class JsonStreamDbEvent {
 
 	type: 'set' | 'del';
 	uuid: string;
 	serial: number;
 	topic: string;
-	data: Data;
+	data: Map<string, any>;
 
 
 	// TODO: Check input and throw if missing. This is typed, but data from disk will be `any`, so ignore it.
@@ -24,10 +19,33 @@ export default class JsonStreamDbEvent {
 		data?: {[key: string]: any}
 	}) {
 
-               this.type = json.type;
-               this.topic = json.topic;
-               this.uuid = json.uuid;
-               this.data = json.data;
+		// Convert the conveinient hash argument to a proper map.
+		const dataMap = new Map(Object.keys(json.data)
+			.map(key => <[string, any]> [key, json.data[key]])
+		);
+
+		this.type = json.type;
+		this.topic = json.topic;
+		this.uuid = json.uuid;
+		this.data = dataMap;
+	}
+
+
+	// Called by JSON.stringify().
+	toJSON () {
+
+		// Convert the proper Map to a serializable hash.
+		const data: {[key: string]: any} = {};
+		Array.from(this.data).forEach(
+			([key, value]) => { data[key] = value; }
+		);
+
+		return {
+			type: this.type,
+			topic: this.topic,
+			uuid: this.uuid,
+			data: data
+		};
 	}
 
 }

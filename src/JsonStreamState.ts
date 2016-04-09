@@ -5,8 +5,8 @@ import JsonStreamDbEvent from './JsonStreamDbEvent';
 
 export default class JsonStreamState extends Writable {
 
-	// TODO: Change to Map<string, Map<string, any>>.
-	topics: {[key: string]: {[key: string]: any}};
+	topics: Map<string, Map<string, any>>;
+
 
 	constructor (options?: any) {
 
@@ -15,23 +15,34 @@ export default class JsonStreamState extends Writable {
 
 		super(options);
 
-		this.topics = {};
+		this.topics = new Map();
 	}
 
 
 	_write (update: JsonStreamDbEvent, encoding: string, callback: Function) {
 
-		const objects = this.topics[update.topic] || (this.topics[update.topic] = {});
+		if (!this.topics.has(update.topic)) {
+
+			this.topics.set(update.topic, new Map());
+		}
+
+		const objects = this.topics.get(update.topic);
 
 		switch (update.type) {
 
 			case 'set': {
 
-				const object = objects[update.uuid] || (objects[update.uuid] = {});
+				if (!objects.has(update.uuid)) {
 
-				Object.keys(update.data).forEach(key => {
+					objects.set(update.uuid, new Map());
+				}
 
-					object[key] = update.data[key];
+				const object = objects.get(update.uuid);
+
+				// TODO: Ugly.
+				Array.from(update.data.keys()).forEach(key => {
+
+					object.set(key, update.data.get(key));
 				});
 
 			} break;
@@ -39,7 +50,7 @@ export default class JsonStreamState extends Writable {
 
 			case 'del': {
 
-				delete objects[update.uuid];
+				delete objects.delete(update.uuid);
 
 			} break;
 

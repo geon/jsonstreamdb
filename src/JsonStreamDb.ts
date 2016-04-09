@@ -96,7 +96,7 @@ export default class JsonStreamDb extends PassThrough {
 	}
 
 
-	update (topic: string, uuid: string, data: Object) {
+	update (topic: string, uuid: string, data: {[key: string]: any}) {
 
 		super.write(new JsonStreamDbEvent({
 			type:'set',
